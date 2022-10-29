@@ -1,5 +1,5 @@
-using API.Repository;
-using API.Interface;
+using WEB_API.Repository;
+using WEB_API.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddScoped<InterfaceStudent, StudentRepository>();
+builder.Services.AddScoped<InterfaceCourse, CourseRepository>();
+builder.Services.AddScoped<InterfaceStudentCourse, StudentCourseRepository>();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

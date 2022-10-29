@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "OadhNL/vLsA/CigDyutscs5q6A73Xzc3F64zuhs5aUDELTaTxEHs83XZWmO2fQQKzo3KU45/5v+oWk2ZiOy7OQ==",
+  "dgSpecHash": "Vez/siYnom/3VRS8B0a27ZpOWDOda+QTogbb7KQfewIzDe2vaBuVxb7w/+JcybgPVmqfhm/rWnYD/YUJGJSubg==",
   "success": true,
-  "projectFilePath": "C:\\Cursos\\Visual Studio\\C#\\API\\API.csproj",
+  "projectFilePath": "C:\\Cursos\\Visual Studio\\C#\\WEB-API\\API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ACER\\.nuget\\packages\\dapper\\2.0.123\\dapper.2.0.123.nupkg.sha512",
     "C:\\Users\\ACER\\.nuget\\packages\\microsoft.data.sqlite\\6.0.10\\microsoft.data.sqlite.6.0.10.nupkg.sha512",
