@@ -40,9 +40,10 @@ namespace WEB_API.Repository
         }
         public async Task<IEnumerable<StudentCourse>> GetAllData()
         {
-            string sqlQuery = "SELECT sc.IdStudentCourses, sc.IdStudent, sc.IdCourse, s.Identification AS IdentificationStudent, s.LastName AS LastNameStudent,s.FirstName AS FirstNameStudent, c.Name AS NameCourse " + 
-                                "FROM Students_Course sc JOIN Students s ON sc.IdStudent = s.IdStudent " +
-                                    "JOIN Courses c ON  sc.IdCourse = c.IdCourse; ";
+            string sqlQuery = "SELECT sc.IdStudent AS IdStudent, sc.IdCourse AS IdCourse, s.Identification AS " + 
+                                "IdentificationStudent, s.LastName AS LastNameStudent,s.FirstName AS FirstNameStudent, " + 
+                                    "c.Name AS NameCourse FROM Students_Course sc JOIN Students s ON sc.IdStudent = s.IdStudent " +
+                                        "JOIN Courses c ON  sc.IdCourse = c.IdCourse; ";
 
             using (var connection = new SqliteConnection(_connectionString))
             {

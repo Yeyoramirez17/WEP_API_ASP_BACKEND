@@ -29,7 +29,7 @@ namespace WEB_API.Controllers
         public async Task<ActionResult<StudentCourse>> CreateStudentCourse([FromBody] StudentCourse studentCourse)
         {
             var newStudentCourse = await _iStudentCourseRepository.CreateStudentCourse(studentCourse);
-            return CreatedAtAction(nameof(GetAllData), new { IdStudentCourses = studentCourse.IdStudentCourses }, newStudentCourse);
+            return CreatedAtAction(nameof(GetAllData), new { idStudent = studentCourse.IdStudent }, newStudentCourse);
         }
     }
 }

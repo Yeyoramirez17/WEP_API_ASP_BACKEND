@@ -29,6 +29,7 @@ namespace WEB_API.Controllers
         {
             return await _iStudentRepository.GetId(id);
         }
+        
         [HttpGet("StudentAndCourses/{idStudent}")]
         public async Task<ActionResult<Student>> getStudentAndCoursesById(int idStudent)
         {

@@ -32,7 +32,7 @@ namespace WEB_API.Controllers
             Course newCourse = await _iCourseRepository.CreateCourse(course);
             return CreatedAtAction(nameof(getAll), new { id =  newCourse.IdCourse }, course);
         }
-        [HttpPut("{idCourse}")]
+        [HttpPut("/{idCourse}")]
         public async Task<ActionResult<Course>> UpdateCourse(int idCourse, Course course)
         {
             if (idCourse != course.IdCourse)
@@ -40,6 +40,18 @@ namespace WEB_API.Controllers
             
             await _iCourseRepository.UpdateCourse(idCourse, course);
             return NoContent();
+        }
+        [HttpDelete("/{id}")]
+        public async Task<ActionResult> DeleteCourse(int id)
+        {
+            var courseToDelete = await _iCourseRepository.GetById(id);
+
+            if (courseToDelete == null)
+                return NotFound();
+            
+            await _iCourseRepository.DeleteCourse(courseToDelete.IdCourse);
+            return NoContent();
+
         }
     }
 }

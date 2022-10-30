@@ -87,7 +87,7 @@ namespace WEB_API.Repository
         public async Task<Student> GetStudentAndCoursesById(int idStudent)
         {
             string sqlQuery = "SELECT * FROM Students WHERE IdStudent = @idStudent;" + 
-                                "SELECT c.IdCourse, c.Name, c.Credits, c.Hours FROM Courses c JOIN Students_Course sc ON c.IdCourse = sc.IdCourse WHERE IdStudent = @idStudent; ";
+                                "SELECT c.IdCourse, c.Name, c.Credits, c.Hours FROM Courses c JOIN Students_Course sc ON c.IdCourse = sc.IdCourse WHERE sc.IdStudent = @idStudent; ";
             
             using (var connection = new SqliteConnection(_connectionString))
             using (var multi = await connection.QueryMultipleAsync(sqlQuery, new { idStudent }))
