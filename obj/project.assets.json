@@ -509,11 +509,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Cursos\\Visual Studio\\C#\\API\\API.csproj",
+      "projectUniqueName": "C:\\Cursos\\Visual Studio\\C#\\WEB-API\\API.csproj",
       "projectName": "API",
-      "projectPath": "C:\\Cursos\\Visual Studio\\C#\\API\\API.csproj",
+      "projectPath": "C:\\Cursos\\Visual Studio\\C#\\WEB-API\\API.csproj",
       "packagesPath": "C:\\Users\\ACER\\.nuget\\packages\\",
-      "outputPath": "C:\\Cursos\\Visual Studio\\C#\\API\\obj\\",
+      "outputPath": "C:\\Cursos\\Visual Studio\\C#\\WEB-API\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\ACER\\AppData\\Roaming\\NuGet\\NuGet.Config",

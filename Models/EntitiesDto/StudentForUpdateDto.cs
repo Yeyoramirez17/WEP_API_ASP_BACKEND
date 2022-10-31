@@ -1,6 +1,7 @@
-namespace WEB_API.Models;
+namespace WEB_API.Models.EntitiesDto;
 
-public class Student {
+public class StudentForUpdateDto
+{
     public int IdStudent { get; set; }
     public string LastName { get; set; } = string.Empty;
     public string FirstName { get; set; } = string.Empty;
@@ -9,6 +10,4 @@ public class Student {
     public int Age { get; set; }
     public string Phone { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
-    public List<Course> CourseList { get; set; } = new List<Course>();
-
 }

@@ -1,12 +1,13 @@
-using API.Interface;
-using API.Models;
+using WEB_API.Interface;
+using WEB_API.Models;
+using WEB_API.Models.EntitiesDto;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Data.Sqlite;
 using Dapper;
 
-namespace API.Repository
+namespace WEB_API.Repository
 {
     public class StudentRepository : InterfaceStudent
     {
@@ -15,32 +16,56 @@ namespace API.Repository
         {
             _connectionString = configuration.GetConnectionString("Default");
         }
-        public async Task<Student> createStudent(Student student)
+        public async Task<StudentForCreateDto> CreateStudent(StudentForCreateDto student)
         {
-            string sqlQuery = "INSERT INTO Students(nombre, identificacion, edad, telefono) VALUES (@Nombre, @Identificacion, @Edad, @Telefono); ";
+            string sqlQuery = "INSERT INTO Students(LastName, FirstName, Identification, BirthDate, Age, Phone, Email) " + 
+                                  "VALUES (@LastName, @FirstName, @Identification, @BirthDate, @Age, @Phone, @Email); ";
 
             using (var connection = new SqliteConnection(_connectionString))
             {
                 await connection.ExecuteAsync(sqlQuery, new
                 {
-                    student.Nombre,
-                    student.Identificacion,
-                    student.Edad,
-                    student.Telefono
+                    student.LastName,
+                    student.FirstName,
+                    student.Identification,
+                    student.BirthDate,
+                    student.Age,
+                    student.Phone,
+                    student.Email
                 });
             }
             return student;
         }
-        public async Task deleteStudent(int id)
+        public async Task UpdateStudent(int idStudent, StudentForUpdateDto student)
         {
-            var sqlQuery = $"DELETE from Students WHERE Id={id}";
+            string sqlQuery = "UPDATE Students SET LastName=@LastName, FirstName=@FirstName, Identification=@Identification, BirthDate=@BirthDate, " + 
+                                "Age=@Age, Phone=@Phone, Email=@Email WHERE IdStudent = @idStudent; ";
+
+            using (var connection = new SqliteConnection(_connectionString))
+            {
+                await connection.ExecuteAsync(sqlQuery, new
+                {
+                    idStudent,
+                    student.FirstName,
+                    student.LastName,
+                    student.Identification,
+                    student.BirthDate,
+                    student.Age,
+                    student.Phone,
+                    student.Email
+                });
+            }
+        }
+        public async Task DeleteStudent(int id)
+        {
+            var sqlQuery = $"DELETE FROM Students WHERE IdStudent = {id}";
 
             using (var connection = new SqliteConnection(_connectionString))
             {
                 await connection.ExecuteAsync(sqlQuery);
             }
         }
-        public async Task<IEnumerable<Student>> getAll()
+        public async Task<IEnumerable<Student>> GetAll()
         {
             string sqlQuery = "SELECT * FROM Students";
 
@@ -49,29 +74,29 @@ namespace API.Repository
                 return await connection.QueryAsync<Student>(sqlQuery);
             }
         }
-        public async Task<Student> getId(int id)
+        public async Task<Student> GetId(int id)
         {
-            string sqlQuery = "SELECT * FROM Students WHERE id = @StudentId";
+            string sqlQuery = "SELECT * FROM Students WHERE IdStudent = @StudentId";
 
             using (var connection = new SqliteConnection(_connectionString))
             {
                 return await connection.QueryFirstOrDefaultAsync<Student>(sqlQuery, new { StudentId = id });
             }
         }
-        public async Task updateStudent(Student student)
-        {
-            string sqlQuery = "UPDATE Students SET nombre = @Nombre, identificacion = @Identificacion, edad = @Edad, telefono = @Telefono WHERE id = @Id; ";
 
+        public async Task<Student> GetStudentAndCoursesById(int idStudent)
+        {
+            string sqlQuery = "SELECT * FROM Students WHERE IdStudent = @idStudent;" + 
+                                "SELECT c.IdCourse, c.Name, c.Credits, c.Hours FROM Courses c JOIN Students_Course sc ON c.IdCourse = sc.IdCourse WHERE sc.IdStudent = @idStudent; ";
+            
             using (var connection = new SqliteConnection(_connectionString))
+            using (var multi = await connection.QueryMultipleAsync(sqlQuery, new { idStudent }))
             {
-                await connection.ExecuteAsync(sqlQuery, new
-                {
-                    student.Id,
-                    student.Nombre,
-                    student.Identificacion,
-                    student.Edad,
-                    student.Telefono
-                });
+                Student student = await multi.ReadSingleOrDefaultAsync<Student>();
+                if (student != null)
+                    student.CourseList = (await multi.ReadAsync<Course>()).ToList();
+                
+                return student;
             }
         }
     }
