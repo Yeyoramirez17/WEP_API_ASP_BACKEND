@@ -1,6 +1,6 @@
 namespace WEB_API.Models.EntitiesDto;
 
-public class StudentForUpdateDto
+public class StudentForCreateAndUpdateDto
 {
     public int IdStudent { get; set; }
     public string LastName { get; set; } = string.Empty;

@@ -16,7 +16,7 @@ namespace WEB_API.Repository
         {
             _connectionString = configuration.GetConnectionString("Default");
         }
-        public async Task<StudentForCreateDto> CreateStudent(StudentForCreateDto student)
+        public async Task<StudentForCreateAndUpdateDto> CreateStudent(StudentForCreateAndUpdateDto student)
         {
             string sqlQuery = "INSERT INTO Students(LastName, FirstName, Identification, BirthDate, Age, Phone, Email) " + 
                                   "VALUES (@LastName, @FirstName, @Identification, @BirthDate, @Age, @Phone, @Email); ";
@@ -36,7 +36,7 @@ namespace WEB_API.Repository
             }
             return student;
         }
-        public async Task UpdateStudent(int idStudent, StudentForUpdateDto student)
+        public async Task UpdateStudent(int idStudent, StudentForCreateAndUpdateDto student)
         {
             string sqlQuery = "UPDATE Students SET LastName=@LastName, FirstName=@FirstName, Identification=@Identification, BirthDate=@BirthDate, " + 
                                 "Age=@Age, Phone=@Phone, Email=@Email WHERE IdStudent = @idStudent; ";
@@ -85,16 +85,16 @@ namespace WEB_API.Repository
         }
 
         public async Task<Student> GetStudentAndCoursesById(int idStudent)
-        {
+        { 
             string sqlQuery = "SELECT * FROM Students WHERE IdStudent = @idStudent;" + 
-                                "SELECT c.IdCourse, c.Name, c.Credits, c.Hours FROM Courses c JOIN Students_Course sc ON c.IdCourse = sc.IdCourse WHERE sc.IdStudent = @idStudent; ";
+                                "SELECT c.IdCourse, c.NameCourse, c.Credits, c.Hours, c.IdFaculty FROM Courses c JOIN Students_Courses sc ON c.IdCourse = sc.IdCourse WHERE sc.IdStudent = @idStudent; ";
             
             using (var connection = new SqliteConnection(_connectionString))
             using (var multi = await connection.QueryMultipleAsync(sqlQuery, new { idStudent }))
             {
                 Student student = await multi.ReadSingleOrDefaultAsync<Student>();
                 if (student != null)
-                    student.CourseList = (await multi.ReadAsync<Course>()).ToList();
+                    student.Courses = (await multi.ReadAsync<CourseDto>()).ToList();
                 
                 return student;
             }

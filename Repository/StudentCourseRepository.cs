@@ -15,9 +15,9 @@ namespace WEB_API.Repository
         public async Task<StudentCourse> CreateStudentCourse(StudentCourse studentCourse)
         {
             string selectStudent = "SELECT IdStudent FROM Students WHERE Identification = @IdentificationStudent ";
-            string selectCourse = "SELECT IdCourse FROM Courses WHERE Name = @NameCourse";
+            string selectCourse = "SELECT IdCourse FROM Courses WHERE NameCourse = @NameCourse";
 
-            string sqlQuery = $"INSERT INTO Students_Course (IdStudent, IdCourse) VALUES (({selectStudent}), ({selectCourse}));";
+            string sqlQuery = $"INSERT INTO Students_Courses (IdStudent, IdCourse) VALUES (({selectStudent}), ({selectCourse}));";
 
             using(var connection = new SqliteConnection(_connectionString))
             {
@@ -31,7 +31,7 @@ namespace WEB_API.Repository
         }
         public async Task<IEnumerable<StudentCourse>> GetAll()
         {
-            string sqlQuery = "SELECT * FROM Students_Course";
+            string sqlQuery = "SELECT * FROM Students_Courses";
 
             using (var connection = new SqliteConnection(_connectionString))
             {
@@ -42,7 +42,7 @@ namespace WEB_API.Repository
         {
             string sqlQuery = "SELECT sc.IdStudent AS IdStudent, sc.IdCourse AS IdCourse, s.Identification AS " + 
                                 "IdentificationStudent, s.LastName AS LastNameStudent,s.FirstName AS FirstNameStudent, " + 
-                                    "c.Name AS NameCourse FROM Students_Course sc JOIN Students s ON sc.IdStudent = s.IdStudent " +
+                                    "c.NameCourse FROM Students_Courses sc JOIN Students s ON sc.IdStudent = s.IdStudent " +
                                         "JOIN Courses c ON  sc.IdCourse = c.IdCourse; ";
 
             using (var connection = new SqliteConnection(_connectionString))

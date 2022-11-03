@@ -19,30 +19,30 @@ namespace WEB_API.Controllers
             _iStudentRepository = iStudentTepository;
         }
 
-        [HttpGet]
+        [HttpGet("/GetAll/")]
         public async Task<IEnumerable<Student>> getAll()
         {
             return await _iStudentRepository.GetAll();
         }
-        [HttpGet("{id}")]
+        [HttpGet("/StudentById/{id}")]
         public async Task<ActionResult<Student>> getId(int id)
         {
             return await _iStudentRepository.GetId(id);
         }
         
-        [HttpGet("StudentAndCourses/{idStudent}")]
+        [HttpGet("/StudentAndCourses/{idStudent}")]
         public async Task<ActionResult<Student>> getStudentAndCoursesById(int idStudent)
         {
             return await _iStudentRepository.GetStudentAndCoursesById(idStudent);
         }
-        [HttpPost]
-        public async Task<ActionResult<StudentForCreateDto>> CreateStudent([FromBody] StudentForCreateDto student)
+        [HttpPost("/CreateStudent/")]
+        public async Task<ActionResult<StudentForCreateAndUpdateDto>> CreateStudent([FromBody] StudentForCreateAndUpdateDto student)
         {
-           StudentForCreateDto newStudent = await _iStudentRepository.CreateStudent(student);
+           StudentForCreateAndUpdateDto newStudent = await _iStudentRepository.CreateStudent(student);
            return CreatedAtAction(nameof(getAll), new { id = newStudent.IdStudent}, newStudent);
         }
-        [HttpPut("{idStudent}")]
-        public async Task<ActionResult<StudentForUpdateDto>> UpdateStudent(int idStudent, [FromBody] StudentForUpdateDto student)
+        [HttpPut("/UpdateStudent/{idStudent}")]
+        public async Task<ActionResult<StudentForCreateAndUpdateDto>> UpdateStudent(int idStudent, [FromBody] StudentForCreateAndUpdateDto student)
         {
            if (idStudent != student.IdStudent)
            {
@@ -53,7 +53,7 @@ namespace WEB_API.Controllers
 
            return NoContent();
         }
-        [HttpDelete("{id}")]
+        [HttpDelete("/Delete/{id}")]
         public async Task<ActionResult> DeleteStudent(int id)
         {
             var studentToDelete = await _iStudentRepository.GetId(id);

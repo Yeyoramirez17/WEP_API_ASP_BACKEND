@@ -9,6 +9,6 @@ public class Student {
     public int Age { get; set; }
     public string Phone { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
-    public List<Course> CourseList { get; set; } = new List<Course>();
+    public List<CourseDto> Courses { get; set; } = new List<CourseDto>();
 
 }

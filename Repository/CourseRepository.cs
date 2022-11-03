@@ -17,30 +17,34 @@ namespace WEB_API.Repository
         }
         public async Task<Course> CreateCourse(Course course)
         {
-            string sqlQuery = "INSERT INTO Courses (Name, Credits, Hours) VALUES (@Name, @Credits, @Hours); ";
+            string selectIdFacuty = "SELECT * FROM Faculties WHERE Name = @NameFaculty";
+            string sqlQuery = $"INSERT INTO Courses (Name, Credits, Hours, IdFaculty) VALUES (@Name, @Credits, @Hours, ({selectIdFacuty})); ";
 
             using (var connection = new SqliteConnection(_connectionString))
             {
                 await connection.ExecuteAsync(sqlQuery, new {
-                    course.Name,
+                    course.NameCourse,
                     course.Credits,
-                    course.Hours
+                    course.Hours,
+                    course.Faculty.NameFaculty
                 });
             }
             return course;
         }
         public async Task UpdateCourse(int idCourse, Course course)
         {
-            string sqlQuery = "UPDATE Courses SET Name=@Name, Credits=@Credits, Hours=@Hours WHERE IdCourse=@idCourse";
+            string selectIdFacuty = "SELECT * FROM Faculties WHERE Name = @NameFaculty";
+            string sqlQuery = $"UPDATE Courses SET Name=@Name, Credits=@Credits, Hours=@Hours,IdFaculty=({selectIdFacuty}) WHERE IdCourse=@idCourse";
 
             using (var connection = new SqliteConnection(_connectionString))
             {
                 await connection.ExecuteAsync(sqlQuery, new 
                 {
                     idCourse,
-                    course.Name,
+                    course.NameCourse,
                     course.Credits,
-                    course.Hours
+                    course.Hours,
+                    course.Faculty.NameFaculty
                 });
             }
         }
@@ -54,24 +58,48 @@ namespace WEB_API.Repository
             }
         }
 
-        public async Task<IEnumerable<Course>> GetAll()
+        public async Task<IEnumerable<CourseDto>> GetAll()
         {
             string sqlQuery = "SELECT * FROM Courses";
 
             using (var connection = new SqliteConnection(_connectionString))
             {
-                return await connection.QueryAsync<Course>(sqlQuery);
+                return await connection.QueryAsync<CourseDto>(sqlQuery);
             }
         }
-
-        public async Task<Course> GetById(int idCourse)
+        public async Task<CourseDto> GetById(int idCourse)
         {
             string sqlQuery = "SELECT * FROM Courses WHERE IdCourse = @CourseId";
 
             using (var connection = new SqliteConnection(_connectionString))
             {
-                return await connection.QueryFirstOrDefaultAsync<Course>(sqlQuery, new { CourseId = idCourse });
+                return await connection.QueryFirstOrDefaultAsync<CourseDto>(sqlQuery, new { CourseId = idCourse });
             }
         }
+        public async Task<Course> GetCourseAndFaculty(int idCourse)
+        {
+            var sqlQuery = "SELECT * FROM Courses WHERE IdCourse = @CourseId";
+            using (var connection = new SqliteConnection(_connectionString))
+            {
+                var courseDto = await connection.QueryFirstOrDefaultAsync<CourseDto>(sqlQuery, new { CourseId = idCourse });
+                var course = new Course();
+                course.IdCourse = courseDto.IdCourse;
+                course.NameCourse = courseDto.NameCourse;
+                course.Credits = courseDto.Credits;
+                course.Hours = courseDto.Hours;
+                course.Faculty = await GetFacultyById(courseDto.IdFaculty);
+                return course;
+            }
+        }
+        private async Task<Faculty> GetFacultyById(int id)
+        {
+            string sqlQuery = "SELECT * FROM Faculties WHERE IdFaculty = @idFaculty";
+
+            using (var connection = new SqliteConnection(_connectionString))
+            {
+                return await connection.QueryFirstOrDefaultAsync<Faculty>(sqlQuery, new { idFaculty = id });
+            }
+        }
+
     }
 }

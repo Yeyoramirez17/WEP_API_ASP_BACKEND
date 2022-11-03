@@ -10,8 +10,8 @@ namespace WEB_API.Interface
         Task<IEnumerable<Student>> GetAll();
         Task<Student> GetId(int id);
         Task<Student> GetStudentAndCoursesById(int idStudent);
-        Task<StudentForCreateDto> CreateStudent(StudentForCreateDto student);
-        Task UpdateStudent(int idStudent, StudentForUpdateDto student);
+        Task<StudentForCreateAndUpdateDto> CreateStudent(StudentForCreateAndUpdateDto student);
+        Task UpdateStudent(int idStudent, StudentForCreateAndUpdateDto student);
         Task DeleteStudent(int id);
     }
 }

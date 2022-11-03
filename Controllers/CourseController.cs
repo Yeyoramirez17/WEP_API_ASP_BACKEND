@@ -17,22 +17,27 @@ namespace WEB_API.Controllers
             _iCourseRepository = iCourseRepository;
         }
         [HttpGet]
-        public async Task<IEnumerable<Course>> getAll()
+        public async Task<IEnumerable<CourseDto>> getAll()
         {
             return await _iCourseRepository.GetAll();
         }
-        [HttpGet("{idCourse}")]
-        public async Task<ActionResult<Course>> getId(int idCourse)
+        [HttpGet("/GetBtId/{idCourse}")]
+        public async Task<ActionResult<CourseDto>> getId(int idCourse)
         {
             return await _iCourseRepository.GetById(idCourse);
         }
-        [HttpPost]
+        [HttpGet("/GetCourseAndFaculty/{idCourse}")]
+        public async Task<ActionResult<Course>> GetCourseAndFaculty(int idCourse)
+        {
+            return await _iCourseRepository.GetCourseAndFaculty(idCourse);
+        }
+        [HttpPost("/CreateCourse/")]
         public async Task<ActionResult<Course>> CreateCourse(Course course)
         {
             Course newCourse = await _iCourseRepository.CreateCourse(course);
             return CreatedAtAction(nameof(getAll), new { id =  newCourse.IdCourse }, course);
         }
-        [HttpPut("/{idCourse}")]
+        [HttpPut("/UpdateCourse/{idCourse}")]
         public async Task<ActionResult<Course>> UpdateCourse(int idCourse, Course course)
         {
             if (idCourse != course.IdCourse)
@@ -41,7 +46,7 @@ namespace WEB_API.Controllers
             await _iCourseRepository.UpdateCourse(idCourse, course);
             return NoContent();
         }
-        [HttpDelete("/{id}")]
+        [HttpDelete("/DeleteCourse/{id}")]
         public async Task<ActionResult> DeleteCourse(int id)
         {
             var courseToDelete = await _iCourseRepository.GetById(id);
