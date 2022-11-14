@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace WEB_API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Students")]
     [ApiController]
     public class StudentController : ControllerBase
     {
@@ -19,18 +19,18 @@ namespace WEB_API.Controllers
             _iStudentRepository = iStudentTepository;
         }
 
-        [HttpGet("/GetAll/")]
+        [HttpGet("GetAll/")]
         public async Task<IEnumerable<Student>> getAll()
         {
             return await _iStudentRepository.GetAll();
         }
-        [HttpGet("/StudentById/{id}")]
+        [HttpGet("StudentById/{id}")]
         public async Task<ActionResult<Student>> getId(int id)
         {
             return await _iStudentRepository.GetId(id);
         }
         
-        [HttpGet("/StudentAndCourses/{idStudent}")]
+        [HttpGet("StudentAndCourses/{idStudent}")]
         public async Task<ActionResult<Student>> getStudentAndCoursesById(int idStudent)
         {
             return await _iStudentRepository.GetStudentAndCoursesById(idStudent);

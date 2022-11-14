@@ -1,5 +1,6 @@
 using WEB_API.Interface;
 using WEB_API.Models;
+using WEB_API.Models.EntitiesDto;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
@@ -15,10 +16,11 @@ namespace WEB_API.Repository
         {
             _connectionString = configuration.GetConnectionString("Default");
         }
-        public async Task<Course> CreateCourse(Course course)
+        public async Task<CourseCreateUpdate> CreateCourse(CourseCreateUpdate course)
         {
-            string selectIdFacuty = "SELECT * FROM Faculties WHERE Name = @NameFaculty";
-            string sqlQuery = $"INSERT INTO Courses (Name, Credits, Hours, IdFaculty) VALUES (@Name, @Credits, @Hours, ({selectIdFacuty})); ";
+            string selectIdFacuty = $"SELECT f.IdFaculty FROM Faculties f WHERE NameFaculty = @NameFaculty";
+
+            string sqlQuery = $"INSERT INTO Courses (NameCourse, Credits, Hours, IdFaculty) VALUES (@NameCourse, @Credits, @Hours, ({selectIdFacuty})); ";
 
             using (var connection = new SqliteConnection(_connectionString))
             {
@@ -26,15 +28,15 @@ namespace WEB_API.Repository
                     course.NameCourse,
                     course.Credits,
                     course.Hours,
-                    course.Faculty.NameFaculty
+                    course.NameFaculty
                 });
             }
             return course;
         }
-        public async Task UpdateCourse(int idCourse, Course course)
+        public async Task UpdateCourse(int idCourse, CourseCreateUpdate course)
         {
-            string selectIdFacuty = "SELECT * FROM Faculties WHERE Name = @NameFaculty";
-            string sqlQuery = $"UPDATE Courses SET Name=@Name, Credits=@Credits, Hours=@Hours,IdFaculty=({selectIdFacuty}) WHERE IdCourse=@idCourse";
+            string selectIdFacuty = "SELECT IdFaculty FROM Faculties WHERE NameFaculty = @NameFaculty";
+            string sqlQuery = $"UPDATE Courses SET NameCourse=@NameCourse, Credits=@Credits, Hours=@Hours,IdFaculty=({selectIdFacuty}) WHERE IdCourse=@idCourse";
 
             using (var connection = new SqliteConnection(_connectionString))
             {
@@ -44,7 +46,7 @@ namespace WEB_API.Repository
                     course.NameCourse,
                     course.Credits,
                     course.Hours,
-                    course.Faculty.NameFaculty
+                    course.NameFaculty
                 });
             }
         }
@@ -67,6 +69,16 @@ namespace WEB_API.Repository
                 return await connection.QueryAsync<CourseDto>(sqlQuery);
             }
         }
+        public async Task<IEnumerable<CourseCreateUpdate>> GetCourseAll()
+        {
+            string sqlQuery = "SELECT c.IdCourse, c.NameCourse, c.Credits, c.Hours, f.NameFaculty" +
+                                    "FROM Courses c JOIN Faculties f ON c.IdFaculty = f.IdFaculty";
+
+            using (var connection = new SqliteConnection(_connectionString))
+            {
+                return await connection.QueryAsync<CourseCreateUpdate>(sqlQuery);
+            }
+        }
         public async Task<CourseDto> GetById(int idCourse)
         {
             string sqlQuery = "SELECT * FROM Courses WHERE IdCourse = @CourseId";
@@ -74,6 +86,15 @@ namespace WEB_API.Repository
             using (var connection = new SqliteConnection(_connectionString))
             {
                 return await connection.QueryFirstOrDefaultAsync<CourseDto>(sqlQuery, new { CourseId = idCourse });
+            }
+        }
+        public async Task <CourseCreateUpdate> CourseGetById(int idCourse){
+            string sqlQuery = "SELECT c.IdCourse, c.NameCourse, c.Credits, c.Hours, " + 
+            "f.NameFaculty AS NameFaculty FROM Courses c JOIN Faculties f ON c.IdFaculty = f.IdFaculty WHERE IdCourse = @CourseId";
+
+            using (var connection = new SqliteConnection(_connectionString))
+            {
+                return await connection.QueryFirstOrDefaultAsync<CourseCreateUpdate>(sqlQuery, new { CourseId = idCourse });
             }
         }
         public async Task<Course> GetCourseAndFaculty(int idCourse)
@@ -100,6 +121,14 @@ namespace WEB_API.Repository
                 return await connection.QueryFirstOrDefaultAsync<Faculty>(sqlQuery, new { idFaculty = id });
             }
         }
+        private async Task<Faculty> GetFacultyByNameFaculty(string nameFaculty)
+        {
+            string sqlQuery = "SELECT * FROM Faculties WHERE NameFaculty = @NameFaculty";
 
+            using (var connection = new SqliteConnection(_connectionString))
+            {
+                return await connection.QueryFirstOrDefaultAsync<Faculty>(sqlQuery, new { NameFaculty = nameFaculty });
+            }
+        }
     }
 }

@@ -22,7 +22,7 @@ namespace WEB_API.Repository
             using(var connection = new SqliteConnection(_connectionString))
             {
                 await connection.ExecuteAsync(sqlQuery, new 
-                {
+                { 
                     studentCourse.IdentificationStudent,
                     studentCourse.NameCourse
                 });

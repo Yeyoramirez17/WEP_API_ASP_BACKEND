@@ -6,6 +6,7 @@ namespace WEB_API.Interface
     {
         Task<IEnumerable<Faculty>> GetAll();
         Task<Faculty> GetById(int id);
+        Task<Faculty> GetByNameFaculty(string nameFaculty);
         Task<Faculty> CreateFaculty(Faculty faculty);
         Task UpdateFaculty(int idFaculty, Faculty faculty);
         Task DeleteFaculty(int idFaculty);

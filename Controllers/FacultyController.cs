@@ -19,34 +19,39 @@ namespace WEB_API.Controllers
         {
             return await _iFacultyRepository.GetAll();
         }
-        [HttpGet("/{idFaculty}")]
+        [HttpGet("{idFaculty:int}")]
         public async Task<ActionResult<Faculty>> GetById(int idFaculty)
         {
             return await _iFacultyRepository.GetById(idFaculty);
         }
-        [HttpPost("/CreateFaculty")]
+        [HttpGet("GetByNameFaculty/{nameFaculty:Guid}")]
+        public async Task<ActionResult<Faculty>> GetByNameFaculty(string nameFaculty)
+        {
+            return await _iFacultyRepository.GetByNameFaculty(nameFaculty);
+        }
+        [HttpPost("CreateFaculty")]
         public async Task<ActionResult<Faculty>> CreateFaculty(Faculty faculty)
         {
             var newFaculty = await _iFacultyRepository.CreateFaculty(faculty);
-            return CreatedAtAction(nameof(GetAll), new {id = newFaculty.IdFaculty}, faculty);
+            return CreatedAtAction(nameof(GetAll), new { id = newFaculty.IdFaculty }, faculty);
         }
-        [HttpPut("/UpdateFaculty/{idFaculty}")]
+        [HttpPut("UpdateFaculty/{idFaculty}")]
         public async Task<ActionResult<Faculty>> UpdateFaculty(int idFaculty, Faculty faculty)
         {
             if (idFaculty != faculty.IdFaculty)
                 return BadRequest();
-            
+
             await _iFacultyRepository.UpdateFaculty(idFaculty, faculty);
             return NoContent();
         }
-        [HttpDelete("/DeleteFaculty/{idFaculty}")]
+        [HttpDelete("DeleteFaculty/{idFaculty}")]
         public async Task<ActionResult> DeleteFaculty(int idFaculty)
         {
             var facultyToDelete = await _iFacultyRepository.GetById(idFaculty);
 
             if (facultyToDelete == null)
                 return NotFound();
-            
+
             await _iFacultyRepository.DeleteFaculty(facultyToDelete.IdFaculty);
             return NoContent();
         }

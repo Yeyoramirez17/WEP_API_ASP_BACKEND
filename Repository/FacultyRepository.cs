@@ -18,7 +18,8 @@ namespace WEB_API.Repository
 
             using (var connection = new SqliteConnection(_connectionString))
             {
-                await connection.ExecuteAsync(sqlQuery, new {
+                await connection.ExecuteAsync(sqlQuery, new
+                {
                     faculty.NameFaculty,
                     faculty.Address,
                     faculty.Phone,
@@ -33,7 +34,8 @@ namespace WEB_API.Repository
 
             using (var connection = new SqliteConnection(_connectionString))
             {
-                await connection.ExecuteAsync(sqlQuery, new {
+                await connection.ExecuteAsync(sqlQuery, new
+                {
                     idFaculty,
                     faculty.NameFaculty,
                     faculty.Address,
@@ -45,7 +47,7 @@ namespace WEB_API.Repository
         public async Task DeleteFaculty(int idFaculty)
         {
             string sqlQuery = $"DELETE FROM Faculties WHERE IdFaculty = {idFaculty}";
-            
+
             using (var connection = new SqliteConnection(_connectionString))
             {
                 await connection.ExecuteAsync(sqlQuery);
@@ -64,13 +66,21 @@ namespace WEB_API.Repository
 
         public async Task<Faculty> GetById(int id)
         {
-            string sqlQuery = "SELECT * FROM Faculties WHERE IdFaculty = @idFaculty";
+            string sqlQuery = "SELECT * FROM Faculties WHERE IdFaculty = @FacultyId; ";
 
             using (var connection = new SqliteConnection(_connectionString))
             {
-                return await connection.QueryFirstOrDefaultAsync<Faculty>(sqlQuery, new { idFaculty = id });
+                return await connection.QueryFirstOrDefaultAsync<Faculty>(sqlQuery, new { FacultyId = id });
             }
         }
+        public async Task<Faculty> GetByNameFaculty(string nameFaculty)
+        {
+            string sqlQuery = "SELECT * FROM Faculties WHERE NameFaculty = '@FacultyName'; ";
 
+            using (var connection = new SqliteConnection(_connectionString))
+            {
+                return await connection.QueryFirstOrDefaultAsync<Faculty>(sqlQuery, new { FacultyName = nameFaculty });
+            }
+        }
     }
 }
