@@ -35,13 +35,13 @@ namespace WEB_API.Controllers
         {
             return await _iStudentRepository.GetStudentAndCoursesById(idStudent);
         }
-        [HttpPost("/CreateStudent/")]
+        [HttpPost("CreateStudent")]
         public async Task<ActionResult<StudentForCreateAndUpdateDto>> CreateStudent([FromBody] StudentForCreateAndUpdateDto student)
         {
            StudentForCreateAndUpdateDto newStudent = await _iStudentRepository.CreateStudent(student);
            return CreatedAtAction(nameof(getAll), new { id = newStudent.IdStudent}, newStudent);
         }
-        [HttpPut("/UpdateStudent/{idStudent}")]
+        [HttpPut("UpdateStudent/{idStudent}")]
         public async Task<ActionResult<StudentForCreateAndUpdateDto>> UpdateStudent(int idStudent, [FromBody] StudentForCreateAndUpdateDto student)
         {
            if (idStudent != student.IdStudent)
@@ -53,7 +53,7 @@ namespace WEB_API.Controllers
 
            return NoContent();
         }
-        [HttpDelete("/Delete/{id}")]
+        [HttpDelete("DeleteStudent/{id}")]
         public async Task<ActionResult> DeleteStudent(int id)
         {
             var studentToDelete = await _iStudentRepository.GetId(id);
